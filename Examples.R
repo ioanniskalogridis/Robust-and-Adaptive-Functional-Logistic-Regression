@@ -45,7 +45,7 @@ for(k in 1:nrep){
 matplot(grid, m1, type = "l", col = "gray", lwd = 3, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = ""); lines(grid, f1, lwd = 3, col = "black") ;grid()
 matplot(grid, m2, type = "l", col = "gray", lwd = 3,  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = ""); lines(grid, f1, lwd = 3, col = "black") ; grid()
 
-median(msq1, na.rm = TRUE) ; median(msq2, na.rm = TRUE) ; median(msq3, na.rm = TRUE) ; median(msq4, na.rm = TRUE)
+median(msq1) ; median(msq2) ; median(msq3) ; median(msq4)
 
 boot.median <- function(x){
   b <- 10000
