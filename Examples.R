@@ -96,23 +96,21 @@ for(k in 1:nrep){
   y <- rbinom(n, size = 1, prob = inv.logit(y0))
   y[samp]<- 1- y[samp]
   
-  fit <- dpd.f(x = x, y = y, norder = 4, m = 2)
-  # fit0 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 1e-20)
-  fit05 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 2.5)
-  fit1 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 5)
-  fit0 <- p.ml(x, y, norder = 4, nbasis = 30, m = 2)
-  msq[k] <- mean((f1-fit$est)^2)
-  alpha.sel[k] <- fit$alpha
-  ic[k] <- fit$ic
-  
-  ma[, k] <- fit$est
-  m0[, k] <- fit0$est
-  m1[, k] <- fit1$est
-  m05[, k] <- fit05$est
-  
-  msq0[k] <- mean((f1-fit0$est)^2)
-  msq05[k] <- mean((f1-fit05$est)^2)
+  fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2)
+  fit2 <- p.ml(x, y, norder = 4, nbasis = 30, m = 2)
+  fit3 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 2.5)
+  fit4 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 5)
+
   msq1[k] <- mean((f1-fit1$est)^2)
+  msq2[k] <- mean((f1-fit2$est)^2)
+  msq3[k] <- mean((f1-fit3$est)^2)
+  msq4[k] <- mean((f1-fit4$est)^2)
+
+  m1[, k] <- fit1$est
+  m2[, k] <- fit2$est
+  m3[, k] <- fit3$est
+  m4[, k] <- fit4$est
+  
 }
 
 matplot(grid, m0, type = "l", col = "gray", lwd = 3)
