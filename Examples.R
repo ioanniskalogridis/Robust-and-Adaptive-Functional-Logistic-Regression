@@ -13,19 +13,11 @@ msq = msq0 = msq05 = msq1 =  rep(NA, nrep)
 alpha.sel <- rep(NA, nrep)
 ic <- rep(NA, nrep)
 
-for(k in 498:nrep){
+for(k in 1:nrep){
   print(k)
-  # f1 <- 2*sin(40*grid*pi/3)
   # f1 <- -sin(5*grid/1.2)/0.5-1
   # f1 <- 3*sin(3.4*grid^2)
-  # f1 <- 2*cos(4*pi*grid)
-  # f1 <- 2*grid^2
   f1 <- 3*(grid-0.3)^2+1
-  # f1 <- 2*grid/5 + 1
-  # f1 <- 1/(1+grid^2)
-  # f1 <- 1/(1+5*grid)
-  # x <- sqrt(2)*matrix(rnorm(n*p), nrow = n, ncol = p)
-  # X0 <- sqrt(2)*matrix(rt(n*p, df = 3), nrow = n, ncol = p)
   x <- matrix(0, n, p)
   for(i in 1:n){
     x[i, ] <- sqrt(2)*(1*pi-pi/2)^{-1}*rnorm(1, 0, 1)*sapply(grid, FUN= function(x) sin((1-1/2)*pi*x)  )
