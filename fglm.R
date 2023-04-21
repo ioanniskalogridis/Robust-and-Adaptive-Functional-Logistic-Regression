@@ -15,7 +15,7 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
   # toler is the tolerance level of the Fisher-scoring algorithm
   # maxiter is the naximum number of allowed iterations of the algorithm
   # alpha.cand is a vector of candidate values for the tuning parameter (kappa in the notation of the paper)
-  # a pilot estimator corresponding to kappa = 1 is used, as discussed in the paper
+  # a pilot estimator corresponding to kappa = 2.5 is used, as discussed in the paper
   # nsteps denotes the number of allowed iterations for the selection of the tuning parameter
   
   x <- as.matrix(x)
