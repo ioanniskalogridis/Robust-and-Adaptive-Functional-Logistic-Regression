@@ -4,7 +4,6 @@
 nrep <- 1000
 n <- 400
 p <- 200
-eps <- 0
 grid <- seq(1/p, 1-1/p, len = p)
 
 ma <- m0 <- m05 <- m1 <- matrix(NA, nrow = p, ncol = nrep)
