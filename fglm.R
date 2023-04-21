@@ -78,10 +78,7 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
     gr <- c((1+alpha)*gr.t)
     hess.f <- -mnr$hessian
     Q.m <- hess.f - 2*lambda*p.m
-    # Q.m <- -t(x.p)%*%diag(c(gr*(y-inv.logit(x.p%*%beta))))%*%x.p/n
     hat.tr <- sum(diag(  solve(hess.f, Q.m, tol = 1e-22) ))/n
-    # hat.tr <- sum(diag(  solve(hess.f)%*% Q.m ) )/n
-    # hat.tr <- sum(diag (ginv(hess.f)%*%Q.m))/n
     return(list(beta = beta, hat.tr = hat.tr, gr = gr, hess.f = hess.f))
   }
   
@@ -108,16 +105,11 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
   for(k in 1:length(lambda.e.in)){
     lambda.e.in[k] <-  try(Pen.cr(lambda.cand[k], beta.in = beta.in, alpha = 2.5),silent = TRUE)
   }
-  
-  # lambda.e.in <-  try(vapply(lambda.cand, FUN = Pen.cr, beta.in = beta.in, alpha = 2.5, FUN.VALUE = numeric(1)), silent = TRUE)
-  lambda.opt.in <- lambda.cand[which.min(lambda.e.in)]
-  # lambda.opt.in
+    lambda.opt.in <- lambda.cand[which.min(lambda.e.in)]
   beta.opt.in <- newraph(lambda.opt.in, beta.in = beta.in, maxit = maxiter, alpha = 2.5)$beta
   B.m <-  bsplinepen(b.sp, Lfdobj = 0)
 
   comp.alpha <- function(alpha){
-    # lambda.e <-  vapply(lambda.cand, FUN = Pen.cr, beta.in = beta.opt.in, alpha = alpha, FUN.VALUE = numeric(1))
-    # lambda.opt <- lambda.cand[which.min(lambda.e)]
     lambda.e <- rep(0, length(lambda.cand))
     for(k in 1:length(lambda.e)){
       lambda.e[k] <-  try(Pen.cr(lambda.cand[k], beta.in = beta.in, alpha = alpha),silent = TRUE)
@@ -127,9 +119,8 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
     beta.opt  <- opt.$beta
     gr <- opt.$gr
     hessian.m <- -opt.$hess.f
-    K.m <- scale(t(x.p), center = FALSE, scale = c(1/gr^2))%*%x.p/(n^2) #+ 4*lambda.opt^2*p.m%*%beta.opt%*%t(beta.opt)%*%p.m 
+    K.m <- scale(t(x.p), center = FALSE, scale = c(1/gr^2))%*%x.p/(n^2) 
     msq1 <- sum( diag( B.m%*%solve(hessian.m, K.m%*%solve(hessian.m, tol = 1e-22), tol = 1e-22)[2:(nbasis+1), 2:(nbasis+1)]   ) )
-    # msq1 <- sum(diag ( B.m%*%(ginv(hessian.m)%*%K.m%*%ginv(hessian.m))[2:(nbasis+1), 2:(nbasis+1)]   ))
     return(list(msq1 = msq1,  beta.opt = beta.opt, lambda.opt = lambda.opt))
   }
   
@@ -253,93 +244,6 @@ dpd.ffa <- function(x, y, m = 2, toler = 1e-08, maxiter = 1000, nbasis = 30, nor
   lambda.opt.f <- lambda.cand[which.min(lambda.e)]
   
   beta.opt.f <- newraph(lambda.opt.f, beta.in = beta.il, maxit = maxiter, alpha = alpha)$beta
-  
-  est <-  b.sp.e%*%beta.opt.f[-1]
-  fitted <- inv.logit(beta.opt.f[1]+x%*%est/dim(x)[2])
-  resids <- as.vector(y - inv.logit(fitted))
-  p.resids <- as.vector(resids/sqrt(inv.logit(resids)*(1-inv.logit(resids))))
-  
-  ibeta <- function(x,a,b){ pbeta(x,a,b)*beta(a,b)}
-  ansch.r <- function(y, mu){
-    ansch.r <- (ibeta(y, 2/3, 2/3)-ibeta(mu, 2/3, 2/3))/(mu*(1-mu))^{1/6}
-    return(ansch.r)
-  }
-  a.resids <- ansch.r(y, fitted)
-  
-  return(list(est = est, a.resids = a.resids, lambda = lambda.opt.f))
-}
-
-###############################################################################################################################
-###############################################################################################################################
-
-p.ml <- function(x, y, m = 2, toler = 1e-08, maxiter = 1000, nbasis = 30, norder = 4){
-  
-  x <- as.matrix(x)
-  n <- length(y)
-  y <- as.vector(y)
-  b.sp <- create.bspline.basis(c(0, 1), nbasis = nbasis, norder = norder)
-  b.sp.e <- eval.basis(seq(1/dim(x)[2], 1-1/dim(x)[2], len = dim(x)[2]), b.sp)
-  x.p.ni <- x%*%b.sp.e/dim(x)[2]
-  x.p <- cbind(rep(1, n), x.p.ni)
-  
-  p.m <- bsplinepen(b.sp, Lfdobj = m )
-  p.m <- rbind( rep(0, nbasis+1 ), cbind(rep(0, nbasis), p.m) )
-  
-  inv.logit <- function(x) 1/(1+exp(-x))
-  beta.il <- rep(0, dim(x.p)[2])
-  
-  obj.f <- function(beta, pen){
-    lambda = pen
-    obj <- mean(log(dbinom(y, size = 1, prob = inv.logit(x.p%*%beta)))) - lambda*t(beta)%*%(p.m%*%beta)
-    return(obj)
-  }
-  
-  gradient <- function(beta, pen){
-    lambda = pen
-    gr.t <- y-inv.logit(x.p%*%beta)
-    gr <- diag(c(gr.t))%*%x.p
-    gradient <- as.vector(colSums(gr)/n - 2*lambda*(p.m%*%beta))
-    return(gradient)
-  }
-  
-  hessian <-  function(beta, pen){
-    lambda = pen
-    wt <- -inv.logit(x.p%*%beta)*(1-inv.logit(x.p%*%beta))
-    hs <- scale(t(x.p), center = FALSE, scale = c(1/wt))%*%x.p/n - 2*lambda*p.m
-    return(hs)
-  }
-  
-  newraph <- function(lambda, beta.in, maxit = maxiter, tol = toler){
-    mnr <- maxNR(fn = obj.f, grad = gradient, hess = hessian, start = beta.in, pen =  lambda,
-                 control = list(tol = tol, reltol = tol, gradtol = tol, iterlim = maxit))
-    beta = mnr$estimate
-    gr.t <- c(y-inv.logit(x.p%*%beta))
-    hess.f <- mnr$hessian
-    Q.m <- (hess.f + 2*lambda*p.m)
-    # Q.m <- -t(x.p)%*%diag(c(gr.t*(y-inv.logit(x.p%*%beta))))%*%x.p/n
-    hat.tr <- sum(diag(  solve(hess.f, Q.m, tol = 1e-22) ))/n
-    return(list(beta = beta, hat.tr = hat.tr, gr = gr.t, hess.f = hess.f))
-  }
-  
-  obj.f.np <- function(beta){
-    obj <- mean(log(dbinom(y, size = 1, prob = inv.logit(x.p%*%beta))))
-    return(obj)
-  }
-  
-  Pen.cr <- function(lambda, beta.in){
-    nr <- newraph(lambda, beta.in = beta.in, maxit = maxiter)
-    beta <- nr$beta
-    hat.tr <- nr$hat.tr
-    IC <- 2*(obj.f.np(beta)) - 2*hat.tr
-    return(IC)
-  }
-  
-  lambda.cand <- c(1e-12, 6e-12, 1e-11, 6e-11, 1e-10, 6e-10, 1e-09, 5e-09, 9e-09,  1e-08, 5e-08, 9e-08, 1e-07, 5e-07, 9e-07, 1e-06, 5e-06, 9e-06, 1e-05, 5e-05, 9e-05, 1e-04, 5e-04, 9e-04, 
-                   1e-03, 5e-03, 9e-03, 1e-02, 5e-02, 9e-02, 1e-01, 5e-01, 9e-01, 5)
-  lambda.e <-  vapply(lambda.cand, FUN = Pen.cr, beta.in = beta.il, FUN.VALUE = numeric(1))
-  lambda.opt.f <- lambda.cand[which.max(lambda.e)]
-  
-  beta.opt.f <- newraph(lambda.opt.f, beta.in = beta.il, maxit = maxiter)$beta
   
   est <-  b.sp.e%*%beta.opt.f[-1]
   fitted <- inv.logit(beta.opt.f[1]+x%*%est/dim(x)[2])
