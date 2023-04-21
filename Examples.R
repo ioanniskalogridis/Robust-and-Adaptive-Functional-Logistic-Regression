@@ -42,20 +42,9 @@ for(k in 1:nrep){
   
 }
 
-matplot(grid, m0, type = "l", col = "gray", lwd = 3)
-matplot(grid, ma, type = "l", col = "gray", lwd = 3); lines(grid, f1, lwd = 3, col = "black")
-
-m0.o <- m0[, order(msq0)]
-m0.o <- m0.o[, 1:700]
-
-ma.o <- ma[, order(msq)]
-ma.o <- ma.o[, 1:700]
-
 matplot(grid, m0.o, type = "l", col = "gray", lwd = 3, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = ""); lines(grid, f1, lwd = 3, col = "black") ;grid()
 matplot(grid, ma.o, type = "l", col = "gray", lwd = 3,  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = ""); lines(grid, f1, lwd = 3, col = "black") ; grid()
 
-hist(alpha.sel)
-# hist(ic)
 mean(msq, na.rm = TRUE)
 median(msq, na.rm = TRUE) ; median(msq0, na.rm = TRUE) ; median(msq05, na.rm = TRUE) ; median(msq1, na.rm = TRUE)
 median(alpha.sel, na.rm = TRUE)
