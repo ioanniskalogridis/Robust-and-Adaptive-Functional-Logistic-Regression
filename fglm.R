@@ -10,6 +10,7 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
   # Main function
   # x is a matrix contained the values of the discretized predictors
   # y is the response variable
+  # nbasis is the number of B-spline basis functions, by default nbasis = [min(n/4, 30)]
   # norder is the order of the spline basis, by default a cubic spline basis
   # m is the order of the penalty, by default the penalty is placed on the integrated squared second derivative
   # toler is the tolerance level of the Fisher-scoring algorithm
