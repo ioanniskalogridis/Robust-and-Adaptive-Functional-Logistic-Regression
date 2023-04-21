@@ -42,12 +42,10 @@ for(k in 1:nrep){
   
 }
 
-matplot(grid, m0.o, type = "l", col = "gray", lwd = 3, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = ""); lines(grid, f1, lwd = 3, col = "black") ;grid()
-matplot(grid, ma.o, type = "l", col = "gray", lwd = 3,  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = ""); lines(grid, f1, lwd = 3, col = "black") ; grid()
+matplot(grid, m1, type = "l", col = "gray", lwd = 3, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = ""); lines(grid, f1, lwd = 3, col = "black") ;grid()
+matplot(grid, m2, type = "l", col = "gray", lwd = 3,  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = ""); lines(grid, f1, lwd = 3, col = "black") ; grid()
 
-mean(msq, na.rm = TRUE)
-median(msq, na.rm = TRUE) ; median(msq0, na.rm = TRUE) ; median(msq05, na.rm = TRUE) ; median(msq1, na.rm = TRUE)
-median(alpha.sel, na.rm = TRUE)
+median(msq1, na.rm = TRUE) ; median(msq2, na.rm = TRUE) ; median(msq3, na.rm = TRUE) ; median(msq4, na.rm = TRUE)
 
 boot.median <- function(x){
   b <- 10000
@@ -65,10 +63,6 @@ boot.median(msq0)
 boot.median(msq05)
 boot.median(msq1)
 
-plot(grid, f1, type = "l", lwd = 3)
-lines(grid, fit$est, type = "l", lwd = 3, col = "blue")
-lines(grid, fit1$est, lwd = 3)
-lines(grid, fit0$est, lwd = 3, col = "red")
 
 ###################################################### Contamination #######################################################
 ############################################################################################################################
