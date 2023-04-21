@@ -98,7 +98,6 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
     return(IC)
   }
   
-  # beta.in <- rnorm(length(beta.in))
   lambda.cand <- c(1e-12, 6e-12, 1e-11, 6e-11, 1e-10, 6e-10, 1e-09, 5e-09, 9e-09,  1e-08, 5e-08, 9e-08, 1e-07, 5e-07, 9e-07, 1e-06, 5e-06, 9e-06, 1e-05, 5e-05, 9e-05, 1e-04, 5e-04, 9e-04, 
                    1e-03, 5e-03, 9e-03, 1e-02, 5e-02, 9e-02, 1e-01, 5e-01, 9e-01, 5)
   lambda.e.in <- rep(0, length(lambda.cand))
