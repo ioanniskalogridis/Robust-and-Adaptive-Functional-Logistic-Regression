@@ -35,13 +35,12 @@ for(k in 1:nrep){
   msq3[k] <- mean((f1-fit3$est)^2)
   msq4[k] <- mean((f1-fit4$est)^2)
   
-  ma[, k] <- fit$est
-  m0[, k] <- fit0$est
   m1[, k] <- fit1$est
-  m05[, k] <- fit05$est
+  m2[, k] <- fit2$est
+  m3[, k] <- fit3$est
+  m4[, k] <- fit4$est
   
 }
-
 
 matplot(grid, m0, type = "l", col = "gray", lwd = 3)
 matplot(grid, ma, type = "l", col = "gray", lwd = 3); lines(grid, f1, lwd = 3, col = "black")
