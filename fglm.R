@@ -160,11 +160,20 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
 ###########################################################################################################################
 ###########################################################################################################################
 
-dpd.ffa <- function(x, y, m = 2, toler = 1e-08, maxiter = 1000, nbasis = 30, norder = 4,  alpha = 1e-04){
+dpd.ffa <- function(x, y, m = 2, toler = 1e-08, maxiter = 1000, nbasis = NULL, norder = 4,  alpha = 1e-04){
+
+  # Density power divergence with fixed tuning 
+  # alpha is the tuning parameter, by default a very small alpha corresponding to the penalized likelihood estimator
 
   x <- as.matrix(x)
   n <- length(y)
   y <- as.vector(y)
+  if(is.null(nbasis)){
+    nbasis = floor(min(n/4, 30))
+  } else{
+    nbasis = nbasis
+  }
+  
   b.sp <- create.bspline.basis(c(0, 1), nbasis = nbasis, norder = norder)
   b.sp.e <- eval.basis(seq(1/dim(x)[2], 1-1/dim(x)[2], len = dim(x)[2]), b.sp)
   x.p.ni <- x%*%b.sp.e/dim(x)[2]
@@ -216,9 +225,7 @@ dpd.ffa <- function(x, y, m = 2, toler = 1e-08, maxiter = 1000, nbasis = 30, nor
     gr <- c((1+alpha)*gr.t)
     hess.f <- -mnr$hessian
     Q.m <- hess.f - 2*lambda*p.m
-    # Q.m <- -t(x.p)%*%diag(c(gr*(y-inv.logit(x.p%*%beta))))%*%x.p/n
     hat.tr <- sum(diag(  solve(hess.f, Q.m, tol = 1e-20) ))/n
-    # hat.tr <- sum(diag (ginv(hess.f)%*%Q.m))/n
     return(list(beta = beta, hat.tr = hat.tr, gr = gr, hess.f = hess.f))
   }
   
