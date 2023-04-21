@@ -8,6 +8,7 @@ grid <- seq(1/p, 1-1/p, len = p)
 
 m1 <- m2 <- m3 <- m4 <- matrix(NA, nrow = p, ncol = nrep)
 msq1 = msq2 = msq03 = msq4 =  rep(NA, nrep)
+inv.logit <- function(x) 1/(1+exp(-x))
 
 for(k in 1:nrep){
   print(k)
@@ -73,25 +74,14 @@ p <- 200
 eps <- 0.01
 grid <- seq(1/p, 1-1/p, len = p)
 
-msq = msq0 = msq05 = msq1 =  rep(NA, nrep)
-alpha.sel <- rep(NA, nrep)
-ic <- rep(NA, nrep)
-
-ma <- m0 <- m05 <- m1 <- matrix(NA, nrow = p, ncol = nrep)
+msq1 = msq2 = msq3 = msq4 =  rep(NA, nrep)
+m1 <- m2 <- m3 <- m4 <- matrix(NA, nrow = p, ncol = nrep)
 
 for(k in 1:nrep){
   print(k)
-  # f1 <- 2*sin(40*grid*pi/3)
   # f1 <- -sin(5*grid/1.2)/0.5-1
-  # f1 <- 3*exp(-grid^2)
-  # f1 <- 1/(1+5*grid)
-  # f1 <- 2*cos(4*grid*pi/3)
-  f1 <- 2*cos(grid*pi/4)
   # f1 <- 3*sin(3.4*grid^2)
-  # f1 <- 2*cos(4*pi*grid)
-  # f1 <- 5*grid^2
-  # x <- sqrt(2)*matrix(rnorm(n*p), nrow = n, ncol = p)
-  # X0 <- sqrt(2)*matrix(rt(n*p, df = 3), nrow = n, ncol = p)
+  f1 <- 3*(grid-0.3)^2+1
   x <- matrix(0, n, p)
   for(i in 1:n){
     x[i, ] <- sqrt(2)*(1*pi-pi/2)^{-1}*rnorm(1, 0, 1)*sapply(grid, FUN= function(x) sin((1-1/2)*pi*x)  )
@@ -100,21 +90,9 @@ for(k in 1:nrep){
     }
   }
   samp <- sample(1:n, size = floor(n*eps))
-  # for(i in samp){
-  #   x[i, ] <- sqrt(2)*(1*pi-pi/2)^{-1}*rt(1, df = 1)*sapply(grid, FUN= function(x) sin((1-1/2)*pi*x)  )
-  #   for(j in 2:10){
-  #     x[i, ] <- x[i, ] + (j*pi-pi/2)^{-1}*rt(1, df = 1)*sqrt(2)*sapply(grid, FUN= function(x) sin((j-1/2)*pi*x)  ) 
-  #   }
-  # }
   x[samp, ] <- 5*x[samp, ]
 
   y0 = (x%*%f1)/p
-  
-  # sum(abs(y0)>3)
-  # plot(inv.logit(y0))
-  
-  # plot(y0,inv.logit(y0))
-  inv.logit <- function(x) 1/(1+exp(-x))
   y <- rbinom(n, size = 1, prob = inv.logit(y0))
   y[samp]<- 1- y[samp]
   
