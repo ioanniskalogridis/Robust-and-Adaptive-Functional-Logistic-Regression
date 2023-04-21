@@ -6,11 +6,8 @@ n <- 400
 p <- 200
 grid <- seq(1/p, 1-1/p, len = p)
 
-ma <- m0 <- m05 <- m1 <- matrix(NA, nrow = p, ncol = nrep)
-
-msq = msq0 = msq05 = msq1 =  rep(NA, nrep)
-alpha.sel <- rep(NA, nrep)
-ic <- rep(NA, nrep)
+m1 <- m2 <- m3 <- m4 <- matrix(NA, nrow = p, ncol = nrep)
+msq1 = msq2 = msq03 = msq4 =  rep(NA, nrep)
 
 for(k in 1:nrep){
   print(k)
@@ -29,16 +26,14 @@ for(k in 1:nrep){
   y <- rbinom(n, size = 1, prob = inv.logit(y0))
   
   fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2)
+  fit2 <- dpd.ffa(x, y)
   fit3 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 2.5)
   fit4 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 5)
-  fit2 <- dpd.ffa(x, y)
-  msq[k] <- mean((f1-fit$est)^2)
-  alpha.sel[k] <- fit$alpha
-  ic[k] <- fit$ic
-  
-  msq0[k] <- mean((f1-fit0$est)^2)
-  msq05[k] <- mean((f1-fit05$est)^2)
+
   msq1[k] <- mean((f1-fit1$est)^2)
+  msq2[k] <- mean((f1-fit2$est)^2)
+  msq3[k] <- mean((f1-fit3$est)^2)
+  msq4[k] <- mean((f1-fit4$est)^2)
   
   ma[, k] <- fit$est
   m0[, k] <- fit0$est
