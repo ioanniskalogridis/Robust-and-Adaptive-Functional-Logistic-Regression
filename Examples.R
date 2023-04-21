@@ -24,28 +24,14 @@ for(k in 1:nrep){
       x[i, ] <- x[i, ] + (j*pi-pi/2)^{-1}*rnorm(1, 0, 1)*sqrt(2)*sapply(grid, FUN= function(x) sin((j-1/2)*pi*x)  )
     }
   }
-  # par(mgp = c(3.5, 2.5, 0), mar = c(5.1, 5.1, 4.1, 2.1))
-  # matplot(grid,t(x), lwd = 3, col = "gray", type = "l", lty = 1, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "")
-  # grid()
-  # pred.basis <- create.bspline.basis(c(0,1), nbasis = 13)
-  # pred.basis <- eval.basis(grid,pred.basis)
-  # C.m <- matrix(rnorm(n*13), nrow = n, ncol = 13)%*%matrix(runif(13*13), nrow = 13, ncol = 13)
-  # x <- t(pred.basis%*%t(C.m))  
-  # f1 <- sin(10*grid*pi/3)
   
   y0 = x%*%f1/p
-  # sum(abs(y0)>5)
-  # plot(inv.logit(y0))
-  
-  plot(y0,inv.logit(y0))
-  inv.logit <- function(x) 1/(1+exp(-x))
   y <- rbinom(n, size = 1, prob = inv.logit(y0))
   
-  fit <- dpd.f(x = x, y = y, norder = 4, m = 2)
-  # fit0 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 1e-20)
-  fit05 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 2.5)
-  fit1 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 5)
-  fit0 <- dpd.ffa(x, y)
+  fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2)
+  fit3 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 2.5)
+  fit4 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 5)
+  fit2 <- dpd.ffa(x, y)
   msq[k] <- mean((f1-fit$est)^2)
   alpha.sel[k] <- fit$alpha
   ic[k] <- fit$ic
