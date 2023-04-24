@@ -104,10 +104,10 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
   for(k in 1:length(lambda.e.in)){
     lambda.e.in[k] <-  try(Pen.cr(lambda.cand[k], beta.in = beta.in, alpha = 2.5),silent = TRUE)
   }
-    lambda.opt.in <- lambda.cand[which.min(lambda.e.in)]
+  lambda.opt.in <- lambda.cand[which.min(lambda.e.in)]
   beta.opt.in <- newraph(lambda.opt.in, beta.in = beta.in, maxit = maxiter, alpha = 2.5)$beta
   B.m <-  bsplinepen(b.sp, Lfdobj = 0)
-
+  
   comp.alpha <- function(alpha){
     lambda.e <- rep(0, length(lambda.cand))
     for(k in 1:length(lambda.e)){
@@ -160,10 +160,10 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
 ###########################################################################################################################
 
 dpd.ffa <- function(x, y, m = 2, toler = 1e-08, maxiter = 1000, nbasis = NULL, norder = 4,  alpha = 1e-04){
-
+  
   # Density power divergence with fixed tuning 
   # alpha is the tuning parameter, by default a very small alpha corresponding to the penalized likelihood estimator
-
+  
   x <- as.matrix(x)
   n <- length(y)
   y <- as.vector(y)
@@ -224,7 +224,7 @@ dpd.ffa <- function(x, y, m = 2, toler = 1e-08, maxiter = 1000, nbasis = NULL, n
     gr <- c((1+alpha)*gr.t)
     hess.f <- -mnr$hessian
     Q.m <- hess.f - 2*lambda*p.m
-    hat.tr <- sum(diag(  solve(hess.f, Q.m, tol = 1e-20) ))/n
+    hat.tr <- sum(diag(  solve(hess.f, Q.m, tol = 1e-22) ))/n
     return(list(beta = beta, hat.tr = hat.tr, gr = gr, hess.f = hess.f))
   }
   
