@@ -7,7 +7,7 @@ p <- 200
 grid <- seq(1/p, 1-1/p, len = p)
 
 m1 <- m2 <- m3 <- m4 <- matrix(NA, nrow = p, ncol = nrep)
-msq1 = msq2 = msq03 = msq4 =  rep(NA, nrep)
+msq1 = msq2 = msq3 = msq4 =  rep(NA, nrep)
 inv.logit <- function(x) 1/(1+exp(-x))
 
 for(k in 1:nrep){
@@ -28,8 +28,8 @@ for(k in 1:nrep){
   
   fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2)
   fit2 <- dpd.ffa(x, y)
-  fit3 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 2.5)
-  fit4 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 5)
+  fit3 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 1)
+  fit4 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 2)
 
   msq1[k] <- mean((f1-fit1$est)^2)
   msq2[k] <- mean((f1-fit2$est)^2)
@@ -76,6 +76,7 @@ grid <- seq(1/p, 1-1/p, len = p)
 
 msq1 = msq2 = msq3 = msq4 =  rep(NA, nrep)
 m1 <- m2 <- m3 <- m4 <- matrix(NA, nrow = p, ncol = nrep)
+inv.logit <- function(x) 1/(1+exp(-x))
 
 for(k in 1:nrep){
   print(k)
