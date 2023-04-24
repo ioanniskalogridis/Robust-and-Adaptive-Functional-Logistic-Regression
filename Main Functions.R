@@ -5,7 +5,7 @@ require(MASS)
 require(maxLik)
 
 dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxiter = 1000, nsteps = 20, 
-                  alpha.cand = c(seq(1e-06, 5, len = 20), 2.5)){
+                  alpha.cand = c(seq(1e-04, 2, len = 20))){
   
   # Main function
   # x is a matrix contained the values of the discretized predictors
@@ -78,7 +78,7 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
     gr <- c((1+alpha)*gr.t)
     hess.f <- -mnr$hessian
     Q.m <- hess.f - 2*lambda*p.m
-    hat.tr <- sum(diag(  solve(hess.f, Q.m, tol = 1e-22) ))/n
+    hat.tr <- sum(diag(  solve(hess.f, Q.m, tol = 1e-25) ))/n
     return(list(beta = beta, hat.tr = hat.tr, gr = gr, hess.f = hess.f))
   }
   
@@ -102,10 +102,10 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
                    1e-03, 5e-03, 9e-03, 1e-02, 5e-02, 9e-02, 1e-01, 5e-01, 9e-01, 5)
   lambda.e.in <- rep(0, length(lambda.cand))
   for(k in 1:length(lambda.e.in)){
-    lambda.e.in[k] <-  try(Pen.cr(lambda.cand[k], beta.in = beta.in, alpha = 2.5),silent = TRUE)
+    lambda.e.in[k] <-  try(Pen.cr(lambda.cand[k], beta.in = beta.in, alpha = 2),silent = TRUE)
   }
   lambda.opt.in <- lambda.cand[which.min(lambda.e.in)]
-  beta.opt.in <- newraph(lambda.opt.in, beta.in = beta.in, maxit = maxiter, alpha = 2.5)$beta
+  beta.opt.in <- newraph(lambda.opt.in, beta.in = beta.in, maxit = maxiter, alpha = 2)$beta
   B.m <-  bsplinepen(b.sp, Lfdobj = 0)
   
   comp.alpha <- function(alpha){
@@ -119,14 +119,14 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
     gr <- opt.$gr
     hessian.m <- -opt.$hess.f
     K.m <- scale(t(x.p), center = FALSE, scale = c(1/gr^2))%*%x.p/(n^2) 
-    msq1 <- sum( diag( B.m%*%solve(hessian.m, K.m%*%solve(hessian.m, tol = 1e-22), tol = 1e-22)[2:(nbasis+1), 2:(nbasis+1)]   ) )
+    msq1 <- sum( diag( B.m%*%solve(hessian.m, K.m%*%solve(hessian.m, tol = 1e-25), tol = 1e-25)[2:(nbasis+1), 2:(nbasis+1)]   ) )
     return(list(msq1 = msq1,  beta.opt = beta.opt, lambda.opt = lambda.opt))
   }
   
   compts <-  vapply(alpha.cand, FUN = comp.alpha, FUN.VALUE = rep(list(1), 3) )
   ic <- 0
   istop <- 0
-  alpha.in <- 2.5
+  alpha.in <- 2
   while(ic <= nsteps & istop == 0){
     ic = ic + 1 
     msqs <- rep(NA, length(alpha.cand))
