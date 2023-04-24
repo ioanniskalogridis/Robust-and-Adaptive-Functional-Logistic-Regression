@@ -98,7 +98,7 @@ for(k in 1:nrep){
   y[samp]<- 1- y[samp]
   
   fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2)
-  fit2 <- p.ml(x, y, norder = 4, nbasis = 30, m = 2)
+  fit2 <- dpd.ffa(x, y, norder = 4, m = 2)
   fit3 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 2.5)
   fit4 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 5)
 
