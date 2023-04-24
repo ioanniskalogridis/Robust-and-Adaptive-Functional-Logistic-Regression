@@ -99,8 +99,8 @@ for(k in 1:nrep){
   
   fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2)
   fit2 <- dpd.ffa(x, y, norder = 4, m = 2)
-  fit3 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 2.5)
-  fit4 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 5)
+  fit3 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 1)
+  fit4 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 2)
 
   msq1[k] <- mean((f1-fit1$est)^2)
   msq2[k] <- mean((f1-fit2$est)^2)
