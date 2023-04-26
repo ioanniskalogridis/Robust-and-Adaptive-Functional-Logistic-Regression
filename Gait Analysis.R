@@ -13,15 +13,15 @@ par(mgp = c(3.5, 2.5, 0), mar = c(5.1, 5.1, 4.1, 2.1))
 matplot(t(x1), lwd = 3, type = "l", col = "gray", lty = 1, xlab = "", ylab = "")
 
 # Fit the penalized adaptive and ML estimators
-fit.in <- dpd.f(x = x1, y = y1)
-fit.ml.in <- dpd.ffa(x1, y1)
-fit.in$alpha # Notice that a high tuning is selected
+fit.robust <- dpd.f(x = x1, y = y1)
+fit.ml <- dpd.ffa(x1, y1)
+fit.robust$alpha # Notice that a high tuning is selected
 # Plot the estimators
-plot(fit.in$est, type = "l", lwd = 3, col = "blue",  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "") ; grid()
-lines(fit.ml.in$est, type = "l", col = "red", lwd = 3, lty = 2)
+plot(fit.robust$est, type = "l", lwd = 3, col = "blue",  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "") ; grid()
+lines(fit.ml$est, type = "l", col = "red", lwd = 3, lty = 2)
 
 # Check residuals
-hist(fit1$a.resids)
+hist(fit.in$a.resids)
 hist(fit1.ml$a.resids)
 # The robust estimator exhibits some very large residuals but the ML estimator only yields modest values of residuals
 sum(abs(fit1$a.resids)>2)
