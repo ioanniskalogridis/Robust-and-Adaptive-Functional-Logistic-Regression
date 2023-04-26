@@ -59,10 +59,10 @@ boot.median <- function(x){
   print(sd.med)
 }
 
-boot.median(msq)
-boot.median(msq0)
-boot.median(msq05)
 boot.median(msq1)
+boot.median(msq2)
+boot.median(msq3)
+boot.median(msq4)
 
 
 ###################################################### Contamination #######################################################
