@@ -12,16 +12,22 @@ x1 <- df[, -1]
 par(mgp = c(3.5, 2.5, 0), mar = c(5.1, 5.1, 4.1, 2.1))
 matplot(t(x1), lwd = 3, type = "l", col = "gray", lty = 1, xlab = "", ylab = "")
 
-# Fit the penalized adaptive and maximum likelihood estimators
-fit1 <- dpd.f(x = x1, y = y1)
-fit1.ml <- dpd.ffa(x1, y1)
-fit1$alpha
-plot(fit1$est, type = "l", lwd = 3, col = "blue",  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "") ; grid()
-lines(fit1.ml$est, type = "l", col = "red", lwd = 3, lty = 2)
-hist(fit1$a.resids, breaks = 20)
+# Fit the penalized adaptive and ML estimators
+fit.in <- dpd.f(x = x1, y = y1)
+fit.ml.in <- dpd.ffa(x1, y1)
+fit.in$alpha # Notice that a high tuning is selected
+# Plot the estimators
+plot(fit.in$est, type = "l", lwd = 3, col = "blue",  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "") ; grid()
+lines(fit.ml.in$est, type = "l", col = "red", lwd = 3, lty = 2)
+
+# Check residuals
+hist(fit1$a.resids)
 hist(fit1.ml$a.resids)
+# The robust estimator exhibits some very large residuals but the ML estimator only yields modest values of residuals
 sum(abs(fit1$a.resids)>2)
 sum(abs(fit1.ml$a.resids)>2)
+
+
 matplot(t(x1), lwd = 3, type = "l", col = "gray", lty = 1,  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "") ; grid()
 matplot(t(x1[abs(fit1$a.resids)>2, ]), col = "gray", lwd = 3, type = "l", lty = 1,  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "") ; grid()
 y1[abs(fit1$a.resids)>2]
