@@ -113,7 +113,7 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
     for(k in 1:length(lambda.e)){
       lambda.e[k] <-  try(Pen.cr(lambda.cand[k], beta.in = beta.in, alpha = alpha),silent = TRUE)
     }
-    lambda.opt <- lambda.cand[which.min(lambda.e)]
+    lambda.opt <- suppressWarnings(lambda.cand[which.min(lambda.e)])
     opt. <- newraph(lambda.opt, beta.in = beta.opt.in, maxit = maxiter, alpha = alpha)
     beta.opt  <- opt.$beta
     gr <- opt.$gr
