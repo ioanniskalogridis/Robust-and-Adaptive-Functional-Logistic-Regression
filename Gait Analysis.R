@@ -17,7 +17,7 @@ fit.robust <- dpd.f(x = x1, y = y1)
 fit.ml <- dpd.ffa(x1, y1)
 fit.robust$alpha # Notice that a high tuning is selected
 # Plot the estimators
-plot(fit.robust$est, type = "l", lwd = 3, col = "blue",  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "") ; grid()
+plot(fit.robust$est, type = "l", lwd = 3, col = "blue",  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "", ylim = c(-100, 100)) ; grid()
 lines(fit.ml$est, type = "l", col = "red", lwd = 3, lty = 2)
 
 # Check Anscombe residuals
@@ -35,11 +35,14 @@ x2 <- x1[abs(fit.robust$a.resids)<=2,]
 matplot(t(x2), lwd = 3, type = "l", col = "gray", lty = 1)
 fit.robust.wo <- dpd.f(x = x2, y = y2 )
 fit.ml.wo <- dpd.ffa(x2, y2, alpha = 1e-04)
-fit2$alpha
+fit.robust.wo$alpha
+# Notice the low value of the tuning that is selected after the outliers have been removed
 
-plot(fit2$est, type = "l", lwd = 3, col = "blue",  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "") ; grid()
-lines(fit.ml2$est, type = "l", col = "red", lwd = 3, lty = 2)
-# lines(fit.ml2$est, type = "l", col = "red", lwd = 3)
-hist(fit2$a.resids)
-hist(fit.ml2$a.resids)
-sum(abs(fit2$a.resids)>2.6)
+plot(fit.robust.wo$est, type = "l", lwd = 3, col = "blue",  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "",
+     ylim = c(-100, 100)) ; grid()
+lines(fit.ml.wo$est, type = "l", col = "red", lwd = 3, lty = 2)
+
+# Check residuals again
+hist(fit.robust.wo$a.resids, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "")
+hist(fit.ml.wo$a.resids, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "")
+# Identical results after the removal of the outliers
