@@ -1,13 +1,11 @@
-# Toe segmentation 2
-# df1 <- read.table("C:/Users/u0111580/Desktop/toes1.tsv", sep = '\t', header = F)
-# df2 <- read.table("C:/Users/u0111580/Desktop/toes2.tsv", sep = '\t', header = F)
+####################################################### Gait Analysis in Kalogridis (2023) #########################################
 
+# Import the two datasets
+#df1 <- read.table(file = file.choose(), sep = '\t', header = F)
+#df2 <- read.table(file = file.choose(), sep = '\t', header = F)
 
-df1 <- read.table(file = file.choose(), sep = '\t', header = F)
-
+# Merge the training and testing data
 df <- rbind(df1, df2)
-# y <- ifelse(df[, 1]==-1, 0, 1)
-# y <- df[, 1]-1
 y1 <- df[, 1]
 x1 <- df[, -1]
 matplot(t(x1), lwd = 3, type = "l", col = "gray", lty = 1)
