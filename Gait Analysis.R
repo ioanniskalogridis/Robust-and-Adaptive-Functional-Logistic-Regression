@@ -23,7 +23,7 @@ lines(fit.ml$est, type = "l", col = "red", lwd = 3, lty = 2)
 
 # Check Anscombe residuals
 hist(fit.robust$a.resids, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "", main = "") ; grid()
-hist(fit.ml$a.resids,  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "") ; grid()
+hist(fit.ml$a.resids,  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "", main = "") ; grid()
 # The robust estimator exhibits some very large residuals but the ML estimator only yields modest values of residuals
 sum(abs(fit.robust$a.resids)>2) 
 # 19 residuals larger than 2 according to the robust estimator
