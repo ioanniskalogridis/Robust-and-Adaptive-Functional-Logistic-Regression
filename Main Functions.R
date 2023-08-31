@@ -152,9 +152,9 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
     for(k in 1:length(lambda.e)){
       lambda.e[k] <-  try(Pen.cr(lambda.cand[k], beta.in = beta.in, alpha = tuning),silent = TRUE)
     }
-    lambda.opt <- suppressWarnings(lambda.cand[which.min(lambda.e)])
-    opt. <- newraph(lambda.opt, beta.in = beta.opt.in, maxit = maxiter, alpha = tuning)
-    beta.opt  <- opt.$beta
+    lambda.opt.f <- suppressWarnings(lambda.cand[which.min(lambda.e)])
+    opt. <- newraph(lambda.opt.f, beta.in = beta.opt.in, maxit = maxiter, alpha = tuning)
+    beta.opt.f  <- opt.$beta
     gr <- opt.$gr
   }
   
@@ -170,7 +170,8 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
   }
   a.resids <- ansch.r(y, fitted)
   
-  return(list(est = est, a.resids = a.resids, alpha = alpha.opt, ic = ic, lambda = lambda.opt.f))
+  return(list(est = est, a.resids = a.resids, alpha = ifelse(is.null(tuning),alpha.opt, tuning), ic = ifelse(is.null(tuning),ic, 1), 
+              lambda = lambda.opt.f))
 }
 ###########################################################################################################################
 ###########################################################################################################################
