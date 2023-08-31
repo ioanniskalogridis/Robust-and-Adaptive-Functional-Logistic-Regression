@@ -4,7 +4,7 @@ require(fda)
 require(MASS)
 require(maxLik)
 
-dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxiter = 1000, nsteps = 20, 
+dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxiter = 1000, nsteps = 20, tuning = NULL,
                   alpha.cand = c(seq(1e-04, 2, len = 20))){
   
   # Main function
