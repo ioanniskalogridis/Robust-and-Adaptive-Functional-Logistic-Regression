@@ -4,12 +4,13 @@ require(fda)
 require(MASS)
 require(maxLik)
 
-dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxiter = 1000, nsteps = 20, tuning = NULL,
+dpd.f <- function(x, y, m = 2, grid, nbasis = NULL,  norder = 4, toler = 1e-08, maxiter = 1000, nsteps = 20, tuning = NULL,
                   alpha.cand = c(seq(1e-04, 2, len = 20))){
   
   # Main function
   # x is a matrix contained the values of the discretized predictors
   # y is the response variable
+  # grid is the (common) observation grid of the covariates "x"
   # nbasis is the number of B-spline basis functions, by default nbasis = [min(n/4, 30)]
   # norder is the order of the spline basis, by default a cubic spline basis
   # m is the order of the penalty, by default the penalty is placed on the integrated squared second derivative
