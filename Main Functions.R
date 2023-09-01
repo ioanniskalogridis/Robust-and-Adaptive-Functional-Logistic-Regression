@@ -31,8 +31,9 @@ dpd.f <- function(x, y, m = 2, grid, nbasis = NULL,  norder = 4, toler = 1e-08, 
     nbasis = nbasis
   }
   b.sp <- create.bspline.basis(c(0, 1), nbasis = nbasis, norder = norder)
-  b.sp.e <- eval.basis(seq(1/dim(x)[2], 1-1/dim(x)[2], len = dim(x)[2]), b.sp)
-  x.p.ni <- x%*%b.sp.e/dim(x)[2]
+  # b.sp.e <- eval.basis(seq(1/dim(x)[2], 1-1/dim(x)[2], len = dim(x)[2]), b.sp)
+  b.sp.e <- eval.basis(grid/max(grid), b.sp)
+  x.p.ni <- x%*%diag(c(0,diff(grid)/max(grid)))%*%b.sp.e
   x.p <- cbind(rep(1, n), x.p.ni)
   
   p.m <- bsplinepen(b.sp, Lfdobj = m )
@@ -160,7 +161,7 @@ dpd.f <- function(x, y, m = 2, grid, nbasis = NULL,  norder = 4, toler = 1e-08, 
   }
   
   est <-  b.sp.e%*%beta.opt.f[-1]
-  fitted <- inv.logit(beta.opt.f[1]+x%*%est/dim(x)[2])
+  fitted <- inv.logit(beta.opt.f[1]+x%*%diag(c(9, diff(grid))) %*% est)
   resids <- as.vector(y - inv.logit(fitted))
   p.resids <- as.vector(resids/sqrt(inv.logit(resids)*(1-inv.logit(resids))))
   
