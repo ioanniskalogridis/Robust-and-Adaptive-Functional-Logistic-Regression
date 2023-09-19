@@ -99,14 +99,9 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
     IC <- 2*(obj.f.np(beta, alpha)) + 2*hat.tr
     return(IC)
   }
-  rho1 = -27
-  rho2 = 1
-  lambda.cand = exp(c(seq(rho1, rho2, length = 50)))
   
-  # lambda.cand <- paste0(c("1e-", "5e-", "9e-"), c("12", "11", "10", "9"), collapse = ",")
-  
-  # lambda.cand <- c(1e-12, 6e-12, 1e-11, 6e-11, 1e-10, 6e-10, 1e-09, 5e-09, 9e-09,  1e-08, 5e-08, 9e-08, 1e-07, 5e-07, 9e-07, 1e-06, 5e-06, 9e-06, 1e-05, 5e-05, 9e-05, 1e-04, 5e-04, 9e-04,
-                   # 1e-03, 5e-03, 9e-03, 1e-02, 5e-02, 9e-02, 1e-01, 5e-01, 9e-01, 5)
+  lambda.cand <- c(1e-12, 6e-12, 1e-11, 6e-11, 1e-10, 6e-10, 1e-09, 5e-09, 9e-09, 1e-08, 5e-08, 9e-08, 1e-07, 5e-07, 9e-07, 1e-06, 5e-06, 9e-06, 1e-05, 5e-05, 9e-05, 1e-04, 5e-04, 9e-04,
+                   1e-03, 5e-03, 9e-03, 1e-02, 5e-02, 9e-02, 1e-01, 5e-01, 9e-01, 5)
   lambda.e.in <- rep(0, length(lambda.cand))
   for(k in 1:length(lambda.e.in)){
     lambda.e.in[k] <-  try(Pen.cr(lambda.cand[k], beta.in = beta.in, alpha = 2),silent = TRUE)
