@@ -1,5 +1,5 @@
 ####################################################### Gait Analysis in Kalogridis (2023) #########################################
-
+rm(list = ls())
 # Import the two datasets
 df1 <- read.table(file = file.choose(), sep = '\t', header = F)
 df2 <- read.table(file = file.choose(), sep = '\t', header = F)
@@ -49,3 +49,4 @@ lines(fit.ml.wo$est, type = "l", col = "red", lwd = 3, lty = 2)
 hist(fit.robust.wo$a.resids, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "")
 hist(fit.ml.wo$a.resids, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "")
 # Identical results after the removal of the outliers
+
