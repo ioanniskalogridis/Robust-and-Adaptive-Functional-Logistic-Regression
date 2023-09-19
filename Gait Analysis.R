@@ -14,7 +14,6 @@ matplot(t(x1), lwd = 3, type = "l", col = "gray", lty = 1, xlab = "", ylab = "",
 
 # Fit the penalized adaptive and ML estimators
 fit.robust <- dpd.f(x = x1, y = y1)
-# fit.ml <- dpd.ffa(x1, y1)
 fit.ml <- dpd.f(x1, y1, tuning = 1e-04)
 fit.robust$alpha 
 # Notice that a large tuning parameter is selected
