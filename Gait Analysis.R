@@ -14,7 +14,8 @@ matplot(t(x1), lwd = 3, type = "l", col = "gray", lty = 1, xlab = "", ylab = "",
 
 # Fit the penalized adaptive and ML estimators
 fit.robust <- dpd.f(x = x1, y = y1)
-fit.ml <- dpd.ffa(x1, y1)
+# fit.ml <- dpd.ffa(x1, y1)
+fit.ml <- dpd.f(x1, y1, tuning = 1e-04)
 fit.robust$alpha 
 # Notice that a large tuning parameter is selected
 # Plot the estimators
@@ -35,7 +36,8 @@ y2 <- y1[abs(fit.robust$a.resids)<=2]
 x2 <- x1[abs(fit.robust$a.resids)<=2,]
 matplot(t(x2), lwd = 3, type = "l", col = "gray", lty = 1)
 fit.robust.wo <- dpd.f(x = x2, y = y2 )
-fit.ml.wo <- dpd.ffa(x2, y2, alpha = 1e-04)
+# fit.ml.wo <- dpd.ffa(x2, y2, alpha = 1e-04)
+fit.ml.wo <- dpd.f(x2, y2, tuning = 1e-04)
 fit.robust.wo$alpha
 # Notice the low value of the tuning that is selected after the outliers have been removed
 

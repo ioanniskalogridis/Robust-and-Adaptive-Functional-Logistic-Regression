@@ -12,9 +12,9 @@ inv.logit <- function(x) 1/(1+exp(-x))
 
 for(k in 1:nrep){
   print(k)
+  f1 <- 3*(grid-0.3)^2+1
   # f1 <- -sin(5*grid/1.2)/0.5-1
   # f1 <- 3*sin(3.4*grid^2)
-  f1 <- 3*(grid-0.3)^2+1
   x <- matrix(0, n, p)
   for(i in 1:n){
     x[i, ] <- sqrt(2)*(1*pi-pi/2)^{-1}*rnorm(1, 0, 1)*sapply(grid, FUN= function(x) sin((1-1/2)*pi*x)  )
@@ -26,10 +26,10 @@ for(k in 1:nrep){
   y0 = x%*%f1/p
   y <- rbinom(n, size = 1, prob = inv.logit(y0))
   
-  fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2)
-  fit2 <- dpd.ffa(x, y)
-  fit3 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 1)
-  fit4 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 2)
+  fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid)
+  fit2 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid, tuning = 1e-05)
+  fit3 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid, tuning = 1)
+  fit4 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid,  tuning = 2)
 
   msq1[k] <- mean((f1-fit1$est)^2)
   msq2[k] <- mean((f1-fit2$est)^2)
@@ -71,7 +71,7 @@ boot.median(msq4)
 nrep <- 1000
 n <- 400
 p <- 200
-eps <- 0.01
+eps <- 0.05
 grid <- seq(1/p, 1-1/p, len = p)
 
 msq1 = msq2 = msq3 = msq4 =  rep(NA, nrep)
@@ -81,8 +81,8 @@ inv.logit <- function(x) 1/(1+exp(-x))
 for(k in 1:nrep){
   print(k)
   # f1 <- -sin(5*grid/1.2)/0.5-1
-  # f1 <- 3*sin(3.4*grid^2)
-  f1 <- 3*(grid-0.3)^2+1
+  f1 <- 3*sin(3.4*grid^2)
+  # f1 <- 3*(grid-0.3)^2+1
   x <- matrix(0, n, p)
   for(i in 1:n){
     x[i, ] <- sqrt(2)*(1*pi-pi/2)^{-1}*rnorm(1, 0, 1)*sapply(grid, FUN= function(x) sin((1-1/2)*pi*x)  )
@@ -97,10 +97,10 @@ for(k in 1:nrep){
   y <- rbinom(n, size = 1, prob = inv.logit(y0))
   y[samp]<- 1- y[samp]
   
-  fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2)
-  fit2 <- dpd.ffa(x, y, norder = 4, m = 2)
-  fit3 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 1)
-  fit4 <- dpd.ffa(x = x, y = y, norder = 4, m = 2, alpha = 2)
+  fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid)
+  fit2 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid, tuning = 1e-05)
+  fit3 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid, tuning = 1)
+  fit4 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid,  tuning = 2)
 
   msq1[k] <- mean((f1-fit1$est)^2)
   msq2[k] <- mean((f1-fit2$est)^2)

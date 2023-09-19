@@ -4,13 +4,12 @@ require(fda)
 require(MASS)
 require(maxLik)
 
-dpd.f <- function(x, y, m = 2, grid, nbasis = NULL,  norder = 4, toler = 1e-08, maxiter = 1000, nsteps = 20, tuning = NULL,
+dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxiter = 1000, nsteps = 20, tuning = NULL,
                   alpha.cand = c(seq(1e-04, 2, len = 20))){
   
   # Main function
   # x is a matrix contained the values of the discretized predictors
   # y is the response variable
-  # grid is the (common) observation grid of the covariates "x"
   # nbasis is the number of B-spline basis functions, by default nbasis = [min(n/4, 30)]
   # norder is the order of the spline basis, by default a cubic spline basis
   # m is the order of the penalty, by default the penalty is placed on the integrated squared second derivative
@@ -31,9 +30,8 @@ dpd.f <- function(x, y, m = 2, grid, nbasis = NULL,  norder = 4, toler = 1e-08, 
     nbasis = nbasis
   }
   b.sp <- create.bspline.basis(c(0, 1), nbasis = nbasis, norder = norder)
-  # b.sp.e <- eval.basis(seq(1/dim(x)[2], 1-1/dim(x)[2], len = dim(x)[2]), b.sp)
-  b.sp.e <- eval.basis(grid/max(grid), b.sp)
-  x.p.ni <- x%*%diag(c(0,diff(grid)/max(grid)))%*%b.sp.e
+  b.sp.e <- eval.basis(seq(1/dim(x)[2], 1-1/dim(x)[2], len = dim(x)[2]), b.sp)
+  x.p.ni <- x%*%b.sp.e/dim(x)[2]
   x.p <- cbind(rep(1, n), x.p.ni)
   
   p.m <- bsplinepen(b.sp, Lfdobj = m )
@@ -101,12 +99,12 @@ dpd.f <- function(x, y, m = 2, grid, nbasis = NULL,  norder = 4, toler = 1e-08, 
     IC <- 2*(obj.f.np(beta, alpha)) + 2*hat.tr
     return(IC)
   }
-  rho1 = -20
-  rho2 = 1
-  lambda.cand = exp(c(seq(rho1, rho2, length = 30)))
+  # rho1 = -25
+  # rho2 = 1
+  # lambda.cand = exp(c(seq(rho1, rho2, length = 50)))
   
-  # lambda.cand <- c(1e-12, 6e-12, 1e-11, 6e-11, 1e-10, 6e-10, 1e-09, 5e-09, 9e-09,  1e-08, 5e-08, 9e-08, 1e-07, 5e-07, 9e-07, 1e-06, 5e-06, 9e-06, 1e-05, 5e-05, 9e-05, 1e-04, 5e-04, 9e-04,
-                   # 1e-03, 5e-03, 9e-03, 1e-02, 5e-02, 9e-02, 1e-01, 5e-01, 9e-01, 5)
+  lambda.cand <- c(1e-12, 6e-12, 1e-11, 6e-11, 1e-10, 6e-10, 1e-09, 5e-09, 9e-09,  1e-08, 5e-08, 9e-08, 1e-07, 5e-07, 9e-07, 1e-06, 5e-06, 9e-06, 1e-05, 5e-05, 9e-05, 1e-04, 5e-04, 9e-04,
+  1e-03, 5e-03, 9e-03, 1e-02, 5e-02, 9e-02, 1e-01, 5e-01, 9e-01, 5)
   lambda.e.in <- rep(0, length(lambda.cand))
   for(k in 1:length(lambda.e.in)){
     lambda.e.in[k] <-  try(Pen.cr(lambda.cand[k], beta.in = beta.in, alpha = 2),silent = TRUE)
@@ -161,7 +159,7 @@ dpd.f <- function(x, y, m = 2, grid, nbasis = NULL,  norder = 4, toler = 1e-08, 
   }
   
   est <-  b.sp.e%*%beta.opt.f[-1]
-  fitted <- inv.logit(beta.opt.f[1]+x%*%diag(c(9, diff(grid))) %*% est)
+  fitted <- inv.logit(beta.opt.f[1]+x%*%est/dim(x)[2])
   resids <- as.vector(y - inv.logit(fitted))
   p.resids <- as.vector(resids/sqrt(inv.logit(resids)*(1-inv.logit(resids))))
   
