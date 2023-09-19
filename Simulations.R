@@ -22,6 +22,8 @@ for(k in 1:nrep){
       x[i, ] <- x[i, ] + (j*pi-pi/2)^{-1}*rnorm(1, 0, 1)*sqrt(2)*sapply(grid, FUN= function(x) sin((j-1/2)*pi*x)  )
     }
   }
+  # par(mgp = c(3.5, 2.5, 0), mar = c(5.1, 5.1, 4.1, 2.1))
+  # matplot(t(x), lwd = 3, type = "l", col = "gray", lty = 1, xlab = "", ylab = "", cex.lab = 2.5, cex.axis = 3, ylim = c(-4, 4)) ; grid()
   
   y0 = x%*%f1/p
   y <- rbinom(n, size = 1, prob = inv.logit(y0))
@@ -71,7 +73,7 @@ boot.median(msq4)
 nrep <- 1000
 n <- 400
 p <- 200
-eps <- 0.05
+eps <- 0.02
 grid <- seq(1/p, 1-1/p, len = p)
 
 msq1 = msq2 = msq3 = msq4 =  rep(NA, nrep)
@@ -92,7 +94,9 @@ for(k in 1:nrep){
   }
   samp <- sample(1:n, size = floor(n*eps))
   x[samp, ] <- 5*x[samp, ]
-
+  # par(mgp = c(3.5, 2.5, 0), mar = c(5.1, 5.1, 4.1, 2.1))
+  # matplot(t(x), lwd = 3, type = "l", col = "gray", lty = 1, xlab = "", ylab = "", cex.lab = 2.5, cex.axis = 3, ylim = c(-4, 4)) ; grid()
+  
   y0 = (x%*%f1)/p
   y <- rbinom(n, size = 1, prob = inv.logit(y0))
   y[samp]<- 1- y[samp]
