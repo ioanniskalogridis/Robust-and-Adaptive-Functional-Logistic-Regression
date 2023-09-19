@@ -10,7 +10,7 @@ y1 <- df[, 1]
 x1 <- df[, -1]
 
 par(mgp = c(3.5, 2.5, 0), mar = c(5.1, 5.1, 4.1, 2.1))
-matplot(t(x1), lwd = 3, type = "l", col = "gray", lty = 1, xlab = "", ylab = "", cex.lab = 2.5, cex.axis = 3) ; grid()
+matplot(t(x1), lwd = 3, type = "l", col = "gray", lty = 1, xlab = "", ylab = "", cex.lab = 2.5, cex.axis = 3, ylim = c(-4, 5.5)) ; grid()
 
 # Fit the penalized adaptive and ML estimators
 fit.robust <- dpd.f(x = x1, y = y1)
