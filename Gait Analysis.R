@@ -28,7 +28,8 @@ hist(fit.ml$a.resids,  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab =
 sum(abs(fit.robust$a.resids)>2) 
 # 19 residuals larger than 2 according to the robust estimator
 # Plot trajectories of observations with large residuals
-matplot(t(x1[abs(fit.robust$a.resids)>2, ]), col = "gray", lwd = 3, type = "l", lty = 1,  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "") ; grid()
+matplot(t(x1[abs(fit.robust$a.resids)>2, ]), col = "gray", lwd = 3, type = "l", lty = 1,  cex = 2.5, cex.axis = 3, cex.lab = 2.5,
+        xlab = "", ylab = "", ylim = c(-4, 5.5)) ; grid()
 
 # Refit the estimators with outliers removed
 y2 <- y1[abs(fit.robust$a.resids)<=2]
