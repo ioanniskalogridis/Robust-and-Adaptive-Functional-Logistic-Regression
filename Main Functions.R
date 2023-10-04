@@ -80,7 +80,7 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
     gr <- c((1+alpha)*gr.t)
     hess.f <- -mnr$hessian
     Q.m <- hess.f - 2*lambda*p.m
-    hat.tr <- sum(diag(  solve(hess.f, Q.m, tol = 1e-25) ))/n
+    hat.tr <- sum(diag(  solve(hess.f, Q.m, tol = 1e-30) ))/n
     return(list(beta = beta, hat.tr = hat.tr, gr = gr, hess.f = hess.f))
   }
   
@@ -99,8 +99,11 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
     IC <- 2*(obj.f.np(beta, alpha)) + 2*hat.tr
     return(IC)
   }
+  # rho1 <- -30
+  # rho2 <- 1
+  # lambda.cand <- exp(seq(rho1, rho2, len = 50))
   
-  lambda.cand <- c(1e-12, 6e-12, 1e-11, 6e-11, 1e-10, 6e-10, 1e-09, 5e-09, 9e-09,  1e-08, 5e-08, 9e-08, 1e-07, 5e-07, 
+  lambda.cand <- c(1e-12, 6e-12, 1e-11, 6e-11, 1e-10, 6e-10, 1e-09, 5e-09, 9e-09,  1e-08, 5e-08, 9e-08, 1e-07, 5e-07,
                    9e-07, 1e-06, 5e-06, 9e-06, 1e-05, 5e-05, 9e-05, 1e-04, 5e-04, 9e-04,
                    1e-03, 5e-03, 9e-03, 1e-02, 5e-02, 9e-02, 1e-01, 5e-01, 9e-01, 5)
   lambda.e.in <- rep(0, length(lambda.cand))
@@ -123,7 +126,7 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
       gr <- opt.$gr
       hessian.m <- -opt.$hess.f
       K.m <- scale(t(x.p), center = FALSE, scale = c(1/gr^2))%*%x.p/(n^2) 
-      msq1 <- sum( diag( B.m%*%solve(hessian.m, K.m%*%solve(hessian.m, tol = 1e-25), tol = 1e-25)[2:(nbasis+1), 2:(nbasis+1)]   ) )
+      msq1 <- sum( diag( B.m%*%solve(hessian.m, K.m%*%solve(hessian.m, tol = 1e-30), tol = 1e-30)[2:(nbasis+1), 2:(nbasis+1)]   ) )
       return(list(msq1 = msq1,  beta.opt = beta.opt, lambda.opt = lambda.opt))
     }
     
@@ -169,8 +172,17 @@ dpd.f <- function(x, y, m = 2, nbasis = NULL,  norder = 4, toler = 1e-08, maxite
   a.resids <- ansch.r(y, fitted)
   
   return(list(est = est, a.resids = a.resids, alpha = ifelse(is.null(tuning),alpha.opt, tuning), ic = ifelse(is.null(tuning),ic, 1), 
-              lambda = lambda.opt.f))
+              interc = beta.opt.f[1],fitted = fitted, lambda = lambda.opt.f))
 }
+
+predict.dpd <- function(x.new, dpd.fit){
+  inv.logit <- function(x) 1/(1+exp(-x))
+  fitted.values <- inv.logit(dpd.fit$interc + as.matrix(x.new)%*%dpd.fit$est/dim(x.new)[2])
+  fitted.prob <- ifelse(fitted.values>=0.5, 1, 0)
+  return(list(fitted.values = fitted.values, fitted.prob = fitted.prob))
+}
+
+
 ###########################################################################################################################
 ###########################################################################################################################
 
