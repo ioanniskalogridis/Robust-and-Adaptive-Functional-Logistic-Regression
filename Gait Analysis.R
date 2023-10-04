@@ -31,14 +31,13 @@ u.tr <- function(x, alpha){
 
 fitted.r <- predict.dpd(x1, fit.robust)
 sum(fitted.r$fitted.prob)
-u.tr(fitted.r$fitted.prob[y1==1&abs(fit.robust$a.resids) <= 2], alpha = 0.00001) # correctly classified as "normal", normal correctly classified as normal
-u.tr(fitted.r$fitted.prob[y1==0&abs(fit.robust$a.resids) <= 2], alpha = 0.1) # abnormal incorrectly classified as "normal"
-
+mean(fitted.r$fitted.prob[y1==1&abs(fit.robust$a.resids) <= 2]) # correctly classified as "normal", normal correctly classified as normal
+mean(fitted.r$fitted.prob[y1==0&abs(fit.robust$a.resids) <= 2]) # abnormal incorrectly classified as "normal"
 
 fitted.ml <- predict.dpd(x1, fit.ml)
 sum(fitted.ml$fitted.prob)
-u.tr(fitted.ml$fitted.prob[y1==1&abs(fit.robust$a.resids) <= 2], alpha = 0.1) # correctly classified as "normal", normal correctly classified as normal
-u.tr(fitted.ml$fitted.prob[y1==0&abs(fit.robust$a.resids) <= 2], alpha = 0.1) # abnormal incorrectly classified as "normal"
+mean(fitted.ml$fitted.prob[y1==1&abs(fit.robust$a.resids) <= 2]) # correctly classified as "normal", normal correctly classified as normal
+mean(fitted.ml$fitted.prob[y1==0&abs(fit.robust$a.resids) <= 2]) # abnormal incorrectly classified as "normal"
 
 which(y1==1)
 mean(fitted.r$fitted.prob[which(y1==1)])
