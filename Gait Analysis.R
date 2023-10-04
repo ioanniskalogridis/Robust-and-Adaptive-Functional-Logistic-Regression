@@ -21,27 +21,6 @@ fit.robust$alpha
 plot(fit.robust$est, type = "l", lwd = 3, col = "blue",  cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "") ; grid()
 lines(fit.ml$est, type = "l", col = "red", lwd = 3, lty = 2)
 
-u.tr <- function(x, alpha){
-  n <- length(x)
-  m <- round(alpha*n)
-  x.s <- sort(x)
-  u.tr <- mean(x.s[1:(n-m)])
-  return(u.tr)
-}
-
-fitted.r <- predict.dpd(x1, fit.robust)
-sum(fitted.r$fitted.prob)
-mean(fitted.r$fitted.prob[y1==1&abs(fit.robust$a.resids) <= 2]) # correctly classified as "normal", normal correctly classified as normal
-mean(fitted.r$fitted.prob[y1==0&abs(fit.robust$a.resids) <= 2]) # abnormal incorrectly classified as "normal"
-
-fitted.ml <- predict.dpd(x1, fit.ml)
-sum(fitted.ml$fitted.prob)
-mean(fitted.ml$fitted.prob[y1==1&abs(fit.robust$a.resids) <= 2]) # correctly classified as "normal", normal correctly classified as normal
-mean(fitted.ml$fitted.prob[y1==0&abs(fit.robust$a.resids) <= 2]) # abnormal incorrectly classified as "normal"
-
-which(y1==1)
-mean(fitted.r$fitted.prob[which(y1==1)])
-
 
 # Check Anscombe residuals
 hist(fit.robust$a.resids, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "", main = "") ; grid()
@@ -71,39 +50,13 @@ hist(fit.robust.wo$a.resids, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", 
 hist(fit.ml.wo$a.resids, cex = 2.5, cex.axis = 3, cex.lab = 2.5, xlab = "", ylab = "")
 # Identical results after the removal of the outliers
 
-#################################5-fold CV ##################################################################
+## Clasification results (see Table 2 in the paper)
+fitted.r <- predict.dpd(x1, fit.robust)
+sum(fitted.r$fitted.prob)
+mean(fitted.r$fitted.prob[y1==1&abs(fit.robust$a.resids) <= 2]) # correctly classified as "normal", normal correctly classified as normal
+mean(fitted.r$fitted.prob[y1==0&abs(fit.robust$a.resids) <= 2]) # abnormal incorrectly classified as "normal"
 
-u.tr <- function(x, alpha){
-  n <- length(x)
-  m <- round(alpha*n)
-  x.s <- sort(x)
-  u.tr <- mean(x.s[1:(n-m)])
-  return(u.tr)
-}
-
-cv.function <- function(x, y, nfolds, int){
-  x <- as.matrix(x)
-  remainder = dim(x)[1]%%nfolds
-  splits <- split(1:dim(x)[1], sample( rep(1:nfolds, times = c(floor(dim(x)[1]/nfolds+remainder), rep( floor(dim(x)[1]/nfolds), nfolds-1 ))  ) ) )
-  rmspe.r <- rep(NA, nfolds)
-  rmpse.ls <- rep(NA, nfolds)
-  
-  for(j in 1:nfolds){
-    x.test <- x[splits[[j]], ]
-    x.train <- x[-splits[[j]], ]
-    y.test <- y[splits[[j]]]
-    y.train <- y[-splits[[j]]]
-    fit.r <- dpd.f(x = x.train, y = y.train)
-    fit.ml <- dpd.f(x = x.train, y = y.train, tuning = 1e-04)
-    
-    x.test <- as.matrix(x.test)
-    pred.values.r <- predict.dpd( x.test, fit.r)
-    pred.values.ml <- predict.dpd( x.test, fit.ml)
-    rmspe.r[j] <- sqrt(u.tr( (y.test-pred.values.r$fitted.prob)^2, 0.1 ))
-    rmpse.ls[j] <- sqrt(u.tr( (y.test-pred.values.ml$fitted.prob)^2,0.1 ))
-  }
-  rmspe.r <- mean(rmspe.r)
-  rmpse.ls <- mean(rmpse.ls)
-  return(list(rmspe.r, rmpse.ls))
-}
-
+fitted.ml <- predict.dpd(x1, fit.ml)
+sum(fitted.ml$fitted.prob)
+mean(fitted.ml$fitted.prob[y1==1&abs(fit.robust$a.resids) <= 2]) # correctly classified as "normal", normal correctly classified as normal
+mean(fitted.ml$fitted.prob[y1==0&abs(fit.robust$a.resids) <= 2]) # abnormal incorrectly classified as "normal"
