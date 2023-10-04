@@ -1,7 +1,7 @@
 ##################################################### Clean data #########################################################
 ##########################################################################################################################
 
-nrep <- 1000
+nrep <- 100
 n <- 400
 p <- 200
 grid <- seq(1/p, 1-1/p, len = p)
@@ -28,10 +28,10 @@ for(k in 1:nrep){
   y0 = x%*%f1/p
   y <- rbinom(n, size = 1, prob = inv.logit(y0))
   
-  fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid)
-  fit2 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid, tuning = 1e-05)
-  fit3 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid, tuning = 1)
-  fit4 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid,  tuning = 2)
+  fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2)
+  fit2 <- dpd.f(x = x, y = y, norder = 4, m = 2, tuning = 1e-04)
+  fit3 <- dpd.f(x = x, y = y, norder = 4, m = 2, tuning = 1)
+  fit4 <- dpd.f(x = x, y = y, norder = 4, m = 2,  tuning = 2)
 
   msq1[k] <- mean((f1-fit1$est)^2)
   msq2[k] <- mean((f1-fit2$est)^2)
@@ -101,10 +101,10 @@ for(k in 1:nrep){
   y <- rbinom(n, size = 1, prob = inv.logit(y0))
   y[samp]<- 1- y[samp]
   
-  fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid)
-  fit2 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid, tuning = 1e-05)
-  fit3 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid, tuning = 1)
-  fit4 <- dpd.f(x = x, y = y, norder = 4, m = 2, grid = grid,  tuning = 2)
+  fit1 <- dpd.f(x = x, y = y, norder = 4, m = 2)
+  fit2 <- dpd.f(x = x, y = y, norder = 4, m = 2, tuning = 1e-04)
+  fit3 <- dpd.f(x = x, y = y, norder = 4, m = 2, tuning = 1)
+  fit4 <- dpd.f(x = x, y = y, norder = 4, m = 2, tuning = 2)
 
   msq1[k] <- mean((f1-fit1$est)^2)
   msq2[k] <- mean((f1-fit2$est)^2)
